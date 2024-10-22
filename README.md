@@ -1,4 +1,5 @@
 My Flask Web Application Messenger
+
 This is a web application built with Flask, Docker, Redis, Nginx and PostgreSQL. Below are the steps to set up and run the application locally.
 
 Getting Started
