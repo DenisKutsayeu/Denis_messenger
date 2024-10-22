@@ -1,0 +1,95 @@
+services:
+  web: &web-service
+    build: .
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./migrations:/app/migrations
+    environment:
+      - SQLALCHEMY_DATABASE_URI
+      - SECRET_KEY
+      - SQLALCHEMY_TRACK_MODIFICATIONS
+      - CELERY_BROKER_URL
+      - CELERY_RESULT_BACKEND
+      - RECAPTCHA_PUBLIC_KEY
+      - RECAPTCHA_PRIVATE_KEY
+      - RECAPTCHA_USE_SSL
+      - REDIS_URL
+      - JWT_SECRET_KEY
+      - EMAIL_PASS
+      - EMAIL_USER
+      - BOT_TOKEN
+    depends_on:
+      - db
+      - redis
+    command: gunicorn -w 4 -b 0.0.0.0:8000 app:app
+
+  db-migrations:
+    build: .
+    command: flask db upgrade
+    init: true
+    profiles:
+      - dev
+    volumes:
+      - ./migrations:/app/migrations
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16-alpine
+    command: ["postgres", "-c", "log_statement=all"]
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  celery:
+    build: .
+    command: celery -A celery_file.celery worker --loglevel=info
+    environment:
+      - SQLALCHEMY_DATABASE_URI
+      - SQLALCHEMY_TRACK_MODIFICATIONS
+      - CELERY_BROKER_URL
+      - CELERY_RESULT_BACKEND
+    depends_on:
+      - redis
+      - db
+    volumes:
+      - ./credo.json:/app/credo.json:ro
+
+  celery-beat:
+    build: .
+    command: celery -A celery_file.celery beat --loglevel=info
+    environment:
+      - SQLALCHEMY_DATABASE_URI
+      - SQLALCHEMY_TRACK_MODIFICATIONS
+      - CELERY_BROKER_URL
+      - CELERY_RESULT_BACKEND
+    depends_on:
+      - redis
+      - db
+    volumes:
+      - ./celerybeat-schedule:/app/celerybeat-schedule
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - web
+
+
+volumes:
+  db_data:

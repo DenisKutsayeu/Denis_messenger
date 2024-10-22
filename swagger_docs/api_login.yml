@@ -1,0 +1,29 @@
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      properties:
+        login:
+          type: string
+          description: Логин пользователя
+          example: "user123"
+        password:
+          type: string
+          description: Пароль пользователя
+          example: "password123"
+    required: # добавляем обязательные поля
+      - login
+      - password
+responses:
+  '200':
+    description: Успешный вход в систему
+    schema:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: Токен доступа
+  '401':
+    description: Неверный логин или пароль

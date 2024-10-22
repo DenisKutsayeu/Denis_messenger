@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <title>Chat</title>
+  </head>
+  <body>
+    <section class="msger">
+      <header class="msger-header">
+        <div class="msger-header-title">
+          <i class="fas fa-comment-alt"></i> SimpleChat
+        </div>
+        <div class="msger-header-title">
+            <span><i><a href="{{ url_for('logout') }}" class="logout-link">Logout</a></i></span>
+        </div>
+      </header>
+      <a href="{{ url_for('ajax_request') }}" style="display: none" id = "link_for_json"></a>
+      <main class="msger-chat" id="main_for_messages">
+      </main>
+
+      <div class="msger-inputarea">
+        <input
+          type="text"
+          class="msger-input"
+          name="message"
+          placeholder="{{ com }}"
+          id = "messageInput"/>
+        <button type="submit" class="msger-send-btn" id="my_button">Send</button>
+      </div>
+    </section>
+    <div id="myBlock"></div>
+    <script src="https://use.fontawesome.com/releases/v5.0.13/js/all.js"></script>
+    <script src="{{ url_for('static', filename='js/fetch.js') }}"></script>
+{% endblock %}

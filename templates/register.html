@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Registration Form -->
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h4>Регистрация нового пользователя</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('register') }}">
+                        {{ form.hidden_tag() }}
+
+                        <!-- Логин -->
+                        <div class="form-group mb-3">
+                            <label for="login">Логин</label>
+                            {{ form.login(class="form-control", id="login") }}
+                            {% if form.login.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.login.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Имя -->
+                        <div class="form-group mb-3">
+                            <label for="name">Имя</label>
+                            {{ form.name(class="form-control", id="name") }}
+                            {% if form.name.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.name.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-group mb-3">
+                            <label for="email">Email</label>
+                            {{ form.email(class="form-control", id="email") }}
+                            {% if form.email.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.email.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                         <div class="form-group mb-3">
+                            <label for="telegram_id">Telegram_ID</label>
+                            {{ form.telegram_id(class="form-control", id="telegram_id") }}
+                            {% if form.telegram_id.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.telegram_id.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Пароль -->
+                        <div class="form-group mb-3">
+                            <label for="password">Пароль</label>
+                            {{ form.password(class="form-control", id="password") }}
+                            {% if form.password.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.password.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Подтверждение пароля -->
+                        <div class="form-group mb-3">
+                            <label for="confirm_password">Подтверждение пароля</label>
+                            {{ form.confirm_password(class="form-control", id="confirm_password") }}
+                            {% if form.confirm_password.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.confirm_password.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- reCAPTCHA -->
+                        <div class="form-group mb-3">
+                            {{ form.recaptcha }}  <!-- Здесь отображается reCAPTCHA -->
+                            {% if form.recaptcha.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.recaptcha.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Кнопка регистрации -->
+                        <div class="form-group text-center">
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+
+                        <!-- Ссылка на вход -->
+                        <div class="text-center">
+                            <a href="{{ url_for('login') }}" class="btn btn-link">Уже есть аккаунт?</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
